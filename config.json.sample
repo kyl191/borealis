@@ -1,0 +1,7 @@
+{
+  "access_token": "<db oauth token>",
+  "app_key": "db app key",
+  "app_secret": "db app secret",
+  "delete_local" : "True",
+  "delete_remote" : "False"
+}
