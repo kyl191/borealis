@@ -104,4 +104,4 @@ class Borealis:
         break
       except dropbox.rest.ErrorResponse as e:
         print(e)
-    return True
+    return d['cursor']
