@@ -1,6 +1,6 @@
 #! /usr/bin/python
 from __future__ import print_function
-import dropbox, json, os, pprint
+import dropbox, json, os, pprint, sys
 
 class Borealis:
   config = {}
@@ -29,6 +29,7 @@ class Borealis:
 
     self.client = dropbox.client.DropboxClient(self.config.get("access_token"))
     print("linked account: %s" % self.client.account_info().get("email"))
+    sys.stdout.flush()
 
   def upload_file(self, path, dest_dir="/",remove_base=None):
     dest = path
@@ -38,6 +39,7 @@ class Borealis:
     size = os.path.getsize(path)
     f = open(path, "rb")
     print("Uploading %s to %s" % (path, dest))
+    sys.stdout.flush()
     uploader = self.client.get_chunked_uploader(f, size)
     while uploader.offset < size:
       try:
@@ -48,6 +50,7 @@ class Borealis:
           os.remove(path)
       except dropbox.rest.ErrorResponse as e:
         print(e)
+        sys.stdout.flush()
 
   def get_folder_content(self, remote_dir="/", dest_dir=os.getcwd(), remove_base=None):
     """
@@ -61,9 +64,11 @@ class Borealis:
         break
       except dropbox.rest.ErrorResponse as e:
         print(e)
+        sys.stdout.flush()
     for f in files:
       path = f.get("path")
       print("Considering %s" % f.get("path"))
+      sys.stdout.flush()
       # If the file entry is a directory, recurse into it
       try:
         if f.get("is_dir"):
@@ -89,9 +94,11 @@ class Borealis:
         # Regardless of whether it was a file or folder, delete it from Dropbox
         if self.config.get("delete_remote"):
           print("Deleting %s" % f.get("path"))
+          sys.stdout.flush()
           self.client.file_delete(f.get("path"))
       except dropbox.rest.ErrorResponse as e:
         print(e)
+        sys.stdout.flush()
 
   def wait_for_activity(self, folder="/"):
     """
@@ -104,4 +111,5 @@ class Borealis:
         break
       except dropbox.rest.ErrorResponse as e:
         print(e)
+        sys.stdout.flush()
     return d['cursor']
