@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 from __future__ import print_function
 from borealis import Borealis
+import ConfigParser
 
-watch_path = "/new"
-dest_dir = "/var/lib/transmission-daemon/watch"
+config = ConfigParser.ConfigParser()
+config.read("db.ini")
+watch_path = config.get("db_get", "watch_path")
+dest_dir = config.get("db_get", "dest_dir")
 app = Borealis("config.json")
 
 try:

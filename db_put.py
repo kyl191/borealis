@@ -3,6 +3,7 @@ import os, time, sys
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from borealis import Borealis
+import ConfigParser
 
 class Handler(FileSystemEventHandler):
   app = Borealis("config.json")
@@ -25,10 +26,12 @@ class Handler(FileSystemEventHandler):
           os.rmdir(root)
 
 if __name__ == '__main__':
-  args = sys.argv[1:]
-  path = args[0] if args else "/var/lib/transmission-daemon/downloads/"
+  config = ConfigParser.ConfigParser()
+  config.read("db.ini")
+  path = config.get("db_put", "watch_path")
+
   observer = Observer()
-  observer.schedule(Handler(dest_dir = "/downloads", remove_base=path), path=path)
+  observer.schedule(Handler(dest_dir = config.get("db_put", "upload_path"), remove_base=path), path=path)
   observer.start()
 
   try:
