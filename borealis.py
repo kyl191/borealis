@@ -86,7 +86,7 @@ class Borealis:
           directory, _ = os.path.split(path)
           # If the eventual destination directory doesn't exist, create it
           if not os.path.isdir(directory):
-            os.makedirs(directory, 0755)
+            os.makedirs(directory, 0o755)
           # Download the file
           # Because we've manipulated path, go back to using f.get("path") for the dropbox access
           with open(path, 'wb') as dest, self.client.get_file(f.get("path")) as src:
